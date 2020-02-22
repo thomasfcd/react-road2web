@@ -8,7 +8,7 @@ class dataListing extends Component {
     this.state = {
       error: null
       , isLoaded: false
-      , closures: []
+      , Closure: []
     };
   }
 
@@ -19,7 +19,7 @@ class dataListing extends Component {
         (result) => {
           this.setState({
             isLoaded: true
-            , closures: result.Closure
+            , Closure: result.Closure
           });
         },
         (error) => {
@@ -32,7 +32,7 @@ class dataListing extends Component {
   }
 
   render() {
-    const { error, isLoaded, closures } = this.state;
+    const { error, isLoaded, Closure } = this.state;
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -40,9 +40,9 @@ class dataListing extends Component {
     } else {
       return (
         <ul>
-          {closures.map(closure => (
-            <li key={closure.id}>
-              {closure.district} {closure.name}
+          {Closure.map(Closure => (
+            <li key={Closure.id}>
+              {Closure.district} {Closure.name}
             </li>
           ))}
         </ul>
