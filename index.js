@@ -50,3 +50,5 @@ class dataListing extends Component {
     }
   }
 }
+
+render(<dataListing />, document.getElementById('data'));
