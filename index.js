@@ -1,26 +1,52 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import Hello from './Hello';
 import './style.css';
 
-class App extends Component {
-  constructor() {
-    super();
+class dataListing extends Component {
+  constructor(props) {
+    super(props);
     this.state = {
-      name: 'React'
+      error: null
+      , isLoaded: false
+      , closures: []
     };
   }
 
+  componentDidMount() {
+    fetch("http://app.toronto.ca/opendata/cart/road_restrictions.json?v=2.0")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            isLoaded: true
+            , closures: result.Closure
+          });
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true
+            , error
+          });
+        }
+      )
+  }
+
   render() {
-    return (
-      <div>
-        <Hello name={this.state.name} />
-        <p>
-          Start editing to see some magic happen :)
-        </p>
-      </div>
-    );
+    const { error, isLoaded, closures } = this.state;
+    if (error) {
+      return <div>Error: {error.message}</div>;
+    } else if (!isLoaded) {
+      return <div>Loading...</div>;
+    } else {
+      return (
+        <ul>
+          {closures.map(closure => (
+            <li key={closure.id}>
+              {closure.district} {closure.name}
+            </li>
+          ))}
+        </ul>
+      );
+    }
   }
 }
-
-render(<App />, document.getElementById('root'));
