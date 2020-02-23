@@ -24,6 +24,7 @@ class dataListing extends Component {
   render() {
     return (
       <div>
+      <p>Here is some data:</p><br/>
         <ul>
           {this.state.Closure.map(post =>
             <li key={post.id}>{post.name}</li>
