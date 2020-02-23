@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
+import axios from 'axios';
 import './style.css';
 
 class dataListing extends Component {
@@ -13,42 +14,24 @@ class dataListing extends Component {
   }
 
   componentDidMount() {
-    fetch("http://app.toronto.ca/opendata/cart/road_restrictions.json?v=2.0")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true
-            , Closure: result.Closure
-          });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true
-            , error
-          });
-        }
-      )
+    axios.get(`http://app.toronto.ca/opendata/cart/road_restrictions.json?v=2.0`)
+      .then(res => {
+        const Closure = res.map(obj => obj.data);
+        this.setState({ Closure });
+      });
   }
 
   render() {
-    const { error, isLoaded, Closure } = this.state;
-    if (error) {
-      return <div>Error: {error.message}</div>;
-    } else if (!isLoaded) {
-      return <div>Loading...</div>;
-    } else {
-      return (
+    return (
+      <div>
         <ul>
-          {Closure.map(Closure => (
-            <li key={Closure.id}>
-              {Closure.district} {Closure.name}
-            </li>
-          ))}
+          {this.state.Closure.map(post =>
+            <li key={post.id}>{post.name}</li>
+          )}
         </ul>
+      </div>
       );
     }
-  }
 }
 
 render(<dataListing />, document.getElementById('data'));
